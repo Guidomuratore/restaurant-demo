@@ -1,9 +1,10 @@
-import { Component, AfterViewInit, OnDestroy, ElementRef, ViewChild, ViewChildren, QueryList, NgZone } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, ElementRef, ViewChild, ViewChildren, QueryList, NgZone, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuItemComponent } from '../menu-item/menu-item';
 import { ProductDetailsComponent } from '../product-details/product-details';
 import { MenuItem } from '../../models/menu-item.model';
 import { ScrollService } from '../../services/scroll.service';
+import { MenuService } from '../../services/menu.service';
 
 @Component({
   selector: 'app-menu-list',
@@ -17,111 +18,46 @@ import { ScrollService } from '../../services/scroll.service';
     }
   `
 })
-export class MenuListComponent implements AfterViewInit, OnDestroy {
-  items: MenuItem[] = [
-    // Burgers
-    {
-      id: '1',
-      name: 'Hamburguesa Premium',
-      description: 'Doble carne, cheddar, bacon y salsa especial.',
-      price: 12500,
-      category: 'Hamburguesas',
-      imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=60'
-    },
-    {
-      id: '101',
-      name: 'Cheeseburger Clásica',
-      description: 'Carne smasheada, doble cheddar, cebolla picada y mostaza.',
-      price: 9500,
-      category: 'Hamburguesas',
-      imageUrl: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=500&q=60'
-    },
-    // Pizzas
-    {
-      id: '2',
-      name: 'Pizza Napolitana',
-      description: 'Salsa de tomate, mozzarella fior di latte, albahaca fresca.',
-      price: 10800,
-      category: 'Pizzas',
-      imageUrl: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=500&q=60'
-    },
-    {
-      id: '201',
-      name: 'Pizza Pepperoni',
-      description: 'Mozzarella generosa y rodajas de pepperoni picante.',
-      price: 11500,
-      category: 'Pizzas',
-      imageUrl: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=500&q=60'
-    },
-    // Ensaladas
-    {
-      id: '3',
-      name: 'Ensalada Caesar',
-      description: 'Lechuga romana, croutones, parmesano y aderezo casero.',
-      price: 8500,
-      category: 'Ensaladas',
-      imageUrl: 'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?auto=format&fit=crop&w=500&q=60'
-    },
-    // Acompañantes
-    {
-      id: '4',
-      name: 'Papas Fritas XL',
-      description: 'Porción gigante con cheddar, panceta y verdeo.',
-      price: 6000,
-      category: 'Acompañantes',
-      imageUrl: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?auto=format&fit=crop&w=500&q=60'
-    },
-    {
-      id: '401',
-      name: 'Aros de Cebolla',
-      description: 'Crocantes, servidos con salsa barbacoa.',
-      price: 5500,
-      category: 'Acompañantes',
-      imageUrl: 'https://images.unsplash.com/photo-1639024471283-03518883512d?auto=format&fit=crop&w=500&q=60'
-    },
-    // Bebidas
-    {
-      id: '501',
-      name: 'Cerveza Artesanal IPA',
-      description: 'Pinta 500ml. Lupulada y refrescante.',
-      price: 4500,
-      category: 'Bebidas',
-      imageUrl: 'https://images.unsplash.com/photo-1608270586620-248524c67de9?auto=format&fit=crop&w=500&q=60'
-    },
-    {
-      id: '502',
-      name: 'Limonada con Menta',
-      description: 'Jarra de 1 litro. Fresca y natural.',
-      price: 3500,
-      category: 'Bebidas',
-      imageUrl: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=500&q=60'
-    },
-    // Postres
-    {
-      id: '601',
-      name: 'Cheesecake de Frutos Rojos',
-      description: 'Cremoso y suave, con salsa casera.',
-      price: 5200,
-      category: 'Postres',
-      imageUrl: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=500&q=60'
-    },
-    {
-      id: '602',
-      name: 'Volcán de Chocolate',
-      description: 'Servido tibio con una bocha de helado de americana.',
-      price: 5800,
-      category: 'Postres',
-      imageUrl: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=500&q=60'
-    }
-  ];
-
-  selectedCategory = 'Hamburguesas';
-  categories = ['Hamburguesas', 'Pizzas', 'Ensaladas', 'Acompañantes', 'Bebidas', 'Postres'];
+export class MenuListComponent implements OnInit, AfterViewInit, OnDestroy {
+  items: MenuItem[] = [];
+  categories: string[] = [];
+  selectedCategory = '';
   selectedItem: MenuItem | null = null;
+  isLoading = true; // Loading state
+
+  private menuService = inject(MenuService);
+  private cdr = inject(ChangeDetectorRef); // Inject CDR
   private observer: IntersectionObserver | null = null;
-  private isClicked = false; // Prevent spy update on click scroll
+  private isClicked = false;
 
   constructor(private ngZone: NgZone) { }
+
+  ngOnInit() {
+    this.isLoading = true;
+    this.menuService.getMenu().subscribe({
+      next: (data) => {
+        console.log('MenuList: Received items:', data);
+        this.items = data;
+        this.categories = [...new Set(data.map(item => item.category))];
+
+        if (this.categories.length > 0) {
+          this.selectedCategory = this.categories[0];
+        }
+
+        this.isLoading = false;
+        this.cdr.markForCheck();
+
+        setTimeout(() => this.setupIntersectionObserver(), 100);
+      },
+      error: (err) => {
+        console.error('MenuList: Error fetching menu', err);
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+
 
   ngAfterViewInit() {
     this.setupIntersectionObserver();

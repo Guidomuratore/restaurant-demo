@@ -1,4 +1,8 @@
-<div class="nav-background sticky">
+<div class="loading-container" *ngIf="isLoading">
+    <div class="spinner"></div>
+</div>
+
+<div class="nav-background sticky" *ngIf="!isLoading">
     <div class="container category-nav">
         <button *ngFor="let cat of categories" [class.active]="selectedCategory === cat"
             (click)="scrollToCategory(cat)">

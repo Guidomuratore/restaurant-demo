@@ -27,13 +27,17 @@ export class ProductDetailsComponent implements OnInit {
   displayExtras: MenuExtra[] = [];
 
   ngOnInit() {
-    this.displayIngredients = this.item.ingredients || ['Lechuga', 'Tomate', 'Cebolla', 'Salsa Especial'];
+    // Implement "Smart" defaults if array is empty but we want to show something? 
+    // No, reliance on MenuService "Smart Parsing" is better.
 
-    this.displayExtras = this.item.extras || [
-      { name: 'Extra Cheddar', price: 1500 },
-      { name: 'Bacon', price: 2000 },
-      { name: 'Huevo Frito', price: 1200 }
-    ];
+    this.displayIngredients = this.item.ingredients && this.item.ingredients.length > 0
+      ? this.item.ingredients
+      : [];
+    // If empty, it means no detected ingredients to remove.
+
+    this.displayExtras = this.item.extras && this.item.extras.length > 0
+      ? this.item.extras
+      : [];
   }
 
   toggleIngredient(ingredient: string, event: any) {

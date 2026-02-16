@@ -12,4 +12,8 @@ import { CartService } from '../../services/cart';
 })
 export class Header {
   cartService = inject(CartService);
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }

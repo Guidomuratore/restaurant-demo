@@ -2,9 +2,11 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { firstValueFrom } from 'rxjs'; // Import firstValueFrom
 import { CartService } from '../../services/cart';
 import { WhatsAppService } from '../../services/whatsapp';
 import { MercadoPagoService } from '../../services/mercadopago.service';
+import { MenuService } from '../../services/menu.service'; // Import MenuService
 import { CartItem } from '../../models/menu-item.model';
 
 @Component({
@@ -18,6 +20,7 @@ export class OrderSummaryComponent {
   cartService = inject(CartService);
   whatsappService = inject(WhatsAppService);
   mpService = inject(MercadoPagoService);
+  menuService = inject(MenuService); // Inject MenuService
   router = inject(Router);
 
   // Checkout State
@@ -90,10 +93,44 @@ export class OrderSummaryComponent {
   async submitOrder() {
     if (!this.validateForm()) return;
 
+    // Validate Stock before proceeding
+    const isStockValid = await this.validateStock();
+    if (!isStockValid) return;
+
     if (this.paymentMethod === 'mercadopago') {
       await this.payWithMercadoPago();
     } else {
       this.sendViaWhatsApp();
+    }
+  }
+
+  async validateStock(): Promise<boolean> {
+    this.isLoadingMp = true; // reusing loader or add new one? reused for now
+    try {
+      const freshMenu = await firstValueFrom(this.menuService.getMenu());
+      const cartItems = this.cartService.cartItems();
+      const invalidItems: string[] = [];
+
+      for (const cartItem of cartItems) {
+        // Check if item exists in fresh menu (which only contains available items)
+        const exists = freshMenu.some(item => item.id === cartItem.id);
+        if (!exists) {
+          invalidItems.push(cartItem.name);
+        }
+      }
+
+      if (invalidItems.length > 0) {
+        alert(`⚠️ Lo sentimos, los siguientes productos ya no están disponibles:\n\n- ${invalidItems.join('\n- ')}\n\nPor favor, quítalos del carrito para continuar.`);
+        this.isLoadingMp = false;
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error validating stock:', error);
+      alert('Hubo un error verificando la disponibilidad de los productos. Por favor intenta nuevamente.');
+      this.isLoadingMp = false;
+      return false;
     }
   }
 
