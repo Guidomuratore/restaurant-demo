@@ -1,0 +1,22 @@
+<div class="nav-background sticky">
+    <div class="container category-nav">
+        <button *ngFor="let cat of categories" [class.active]="selectedCategory === cat"
+            (click)="scrollToCategory(cat)">
+            {{ cat }}
+        </button>
+    </div>
+</div>
+
+<div class="container menu-container">
+    <div *ngFor="let cat of categories" [id]="cat" class="category-section">
+        <h2 class="category-title">{{ cat }}</h2>
+        <div class="menu-grid">
+            <app-menu-item *ngFor="let item of getItemsByCategory(cat)" [item]="item"
+                (selected)="openProductDetails($event)">
+            </app-menu-item>
+        </div>
+    </div>
+</div>
+
+<app-product-details *ngIf="selectedItem" [item]="selectedItem" (close)="closeProductDetails()">
+</app-product-details>

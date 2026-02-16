@@ -1,12 +1,38 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterOutlet, ActivatedRoute } from '@angular/router';
+import { Header } from './components/header/header';
+import { Hero } from './components/hero/hero';
+import { MenuListComponent } from './components/menu-list/menu-list';
+import { CartBubbleComponent } from './components/cart-bubble/cart-bubble';
+import { Footer } from './components/footer/footer';
+import { OrderSummaryComponent } from './components/order-summary/order-summary';
+import { CartService } from './services/cart';
+import { WhatsAppButtonComponent } from './components/whatsapp-button/whatsapp-button';
+import { ScrollTopComponent } from './components/scroll-top/scroll-top';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [CommonModule, RouterOutlet, Header, CartBubbleComponent, Footer, OrderSummaryComponent, WhatsAppButtonComponent, ScrollTopComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
-  protected readonly title = signal('restaurant-demo');
+export class AppComponent implements OnInit {
+  title = 'restaurant-demo';
+  cartService = inject(CartService);
+  private route = inject(ActivatedRoute);
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      const status = params['collection_status'] || params['status'];
+
+      if (status === 'approved') {
+        // Simple alert for now, could be a toast or modal
+        setTimeout(() => alert('✅ ¡Pago exitoso! Muchas gracias por tu compra. 🍔'), 500);
+      } else if (status === 'failure' || status === 'null') {
+        setTimeout(() => alert('❌ Hubo un problema con el pago. Por favor intenta nuevamente.'), 500);
+      }
+    });
+  }
 }

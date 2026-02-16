@@ -1,0 +1,253 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal {
+    background: var(--card-bg);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s ease;
+    border: 1px solid var(--glass-border);
+
+    .modal-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+
+            &:hover {
+                color: white;
+            }
+        }
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+        overflow-y: auto;
+        flex: 1;
+
+        .empty-cart {
+            text-align: center;
+            padding: 2rem 0;
+
+            p {
+                margin-bottom: 1rem;
+                color: var(--text-muted);
+            }
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto;
+            gap: 1rem;
+            align-items: center;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+            &:last-child {
+                border-bottom: none;
+                margin-bottom: 0;
+                padding-bottom: 0;
+            }
+
+            .item-details {
+                h4 {
+                    margin-bottom: 0.2rem;
+                    font-size: 1rem;
+                }
+
+                .price-unit {
+                    font-size: 0.85rem;
+                    color: var(--text-muted);
+                }
+            }
+
+            .controls {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                background: rgba(255, 255, 255, 0.05);
+                padding: 0.25rem;
+                border-radius: var(--radius-sm);
+
+                button {
+                    background: none;
+                    border: none;
+                    color: white;
+                    width: 24px;
+                    height: 24px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    &:hover {
+                        color: var(--primary-color);
+                    }
+                }
+
+                span {
+                    font-weight: 600;
+                    min-width: 1.2rem;
+                    text-align: center;
+                }
+            }
+
+            .item-total {
+                font-weight: 700;
+                color: var(--secondary-color);
+            }
+
+            .remove-btn {
+                background: none;
+                border: none;
+                cursor: pointer;
+                opacity: 0.7;
+
+                &:hover {
+                    opacity: 1;
+                    transform: scale(1.1);
+                }
+            }
+        }
+    }
+
+    .modal-footer {
+        padding: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+
+            .total-amount {
+                color: var(--primary-color);
+                font-size: 1.5rem;
+            }
+        }
+
+        .actions {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-btn {
+            width: 100%;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+
+            &.primary {
+                background: #25D366;
+                /* WhatsApp Green */
+                color: white;
+                /* Margin removed */
+
+                &:hover {
+                    background: #20BA5A;
+                    transform: translateY(-2px);
+                }
+            }
+
+            &.mp-btn {
+                background: #009ee3;
+                /* MercadoPago Blue */
+                color: white;
+
+                &:hover {
+                    background: #007eb5;
+                    transform: translateY(-2px);
+                }
+            }
+
+            &.secondary {
+                background: transparent;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: var(--text-main);
+
+                &:hover {
+                    border-color: var(--text-main);
+                    background: rgba(255, 255, 255, 0.05);
+                }
+            }
+        }
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        max-width: none;
+        border-radius: 0;
+
+        .modal-footer {
+            border-radius: 0;
+        }
+    }
+}

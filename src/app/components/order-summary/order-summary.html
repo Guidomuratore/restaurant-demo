@@ -1,0 +1,69 @@
+<div class="overlay" (click)="close()">
+    <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>Tu Pedido</h2>
+            <button class="close-btn" (click)="close()">×</button>
+        </div>
+
+        <div class="modal-body">
+            <div *ngIf="cartService.cartItems().length === 0" class="empty-cart">
+                <p>Tu carrito está vacío.</p>
+                <button class="cta-btn secondary" (click)="close()">Ver Menú</button>
+            </div>
+
+            <div *ngIf="cartService.cartItems().length > 0" class="cart-items">
+                <div *ngFor="let item of cartService.cartItems(); let i = index" class="cart-item">
+                    <!-- Optional: Image thumbnail if desired -->
+                    <!-- <img [src]="item.imageUrl" alt="" class="thumb"> -->
+
+                    <div class="item-details">
+                        <h4>{{ item.name }}</h4>
+                        <!-- Display Customizations -->
+                        <div class="customizations"
+                            *ngIf="item.selectedExtras?.length || item.removedIngredients?.length || item.notes">
+                            <small *ngIf="item.removedIngredients?.length">Sin: {{ getRemovedIngredients(item)
+                                }}</small>
+                            <small *ngIf="item.selectedExtras?.length">
+                                + {{ getExtrasNames(item) }}
+                            </small>
+                            <small *ngIf="item.notes" class="note">"{{ item.notes }}"</small>
+                        </div>
+                        <span class="price-unit">
+                            {{ (getItemTotal(item) / item.quantity) | currency }}
+                        </span>
+                    </div>
+
+                    <div class="controls">
+                        <button (click)="decrement(i)">-</button>
+                        <span>{{ item.quantity }}</span>
+                        <button (click)="increment(i)">+</button>
+                    </div>
+
+                    <div class="item-total">
+                        {{ getItemTotal(item) | currency }}
+                    </div>
+
+                    <button class="remove-btn" (click)="remove(i)">🗑️</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" *ngIf="cartService.cartItems().length > 0">
+            <div class="total-row">
+                <span>Total</span>
+                <span class="total-amount">{{ cartService.totalPrice() | currency }}</span>
+            </div>
+            <div class="actions">
+                <button class="cta-btn primary" (click)="confirmOrder()">
+                    Pedir por WhatsApp 📱
+                </button>
+                <button class="cta-btn mp-btn" (click)="payWithMercadoPago()" [disabled]="isLoadingMp">
+                    {{ isLoadingMp ? 'Cargando...' : 'Pagar con MercadoPago 💳' }}
+                </button>
+            </div>
+            <button class="cta-btn secondary" (click)="close()">
+                Seguir Pidiendo
+            </button>
+        </div>
+    </div>
+</div>

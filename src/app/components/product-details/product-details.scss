@@ -1,0 +1,219 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 3000;
+    display: flex;
+    align-items: flex-end;
+    /* Bottom sheet on mobile */
+
+    @media (min-width: 768px) {
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.modal {
+    background: var(--card-bg);
+    width: 100%;
+    max-height: 90vh;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideUp 0.3s ease;
+
+    @media (min-width: 768px) {
+        width: 600px;
+        max-height: 85vh;
+        border-radius: var(--radius-lg);
+    }
+
+    .image-header {
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    .modal-content {
+        padding: 1.5rem;
+        overflow-y: auto;
+        flex: 1;
+
+        .header {
+            margin-bottom: 2rem;
+
+            h2 {
+                font-size: 1.75rem;
+                color: var(--text-main);
+                margin-bottom: 0.5rem;
+            }
+
+            .description {
+                color: var(--text-muted);
+                margin-bottom: 1rem;
+            }
+
+            .price-tag {
+                font-size: 1.25rem;
+                font-weight: 700;
+                color: var(--secondary-color);
+            }
+        }
+
+        .customization-section {
+            margin-bottom: 2rem;
+
+            h3 {
+                font-size: 1.1rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .subtitle {
+                font-size: 0.85rem;
+                color: var(--text-muted);
+                margin-bottom: 1rem;
+            }
+
+            .options-grid {
+                display: grid;
+                gap: 0.75rem;
+            }
+
+            .option-item {
+                display: flex;
+                align-items: center;
+                padding: 0.75rem;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: var(--radius-sm);
+                cursor: pointer;
+                transition: background 0.2s;
+
+                &:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                }
+
+                input[type="checkbox"] {
+                    margin-right: 1rem;
+                    width: 20px;
+                    height: 20px;
+                    accent-color: var(--primary-color);
+                }
+
+                .extra-info {
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+
+                    .extra-price {
+                        color: var(--secondary-color);
+                        font-weight: 600;
+                    }
+                }
+            }
+
+            textarea {
+                width: 100%;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                color: white;
+                padding: 0.75rem;
+                border-radius: var(--radius-sm);
+                resize: vertical;
+                font-family: inherit;
+
+                &:focus {
+                    outline: none;
+                    border-color: var(--primary-color);
+                }
+            }
+        }
+    }
+
+    .modal-footer {
+        padding: 1rem 1.5rem;
+        background: var(--card-bg);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50px;
+            padding: 0.25rem;
+
+            button {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: white;
+                border: none;
+                font-weight: 700;
+                cursor: pointer;
+                color: var(--card-bg);
+
+                &:active {
+                    transform: scale(0.9);
+                }
+            }
+
+            span {
+                min-width: 2rem;
+                text-align: center;
+                font-weight: 700;
+            }
+        }
+
+        .add-btn {
+            flex: 1;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+            }
+        }
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}

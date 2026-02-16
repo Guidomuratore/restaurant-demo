@@ -1,0 +1,57 @@
+<div class="overlay" (click)="close.emit()">
+    <div class="modal" (click)="$event.stopPropagation()">
+        <div class="image-header" *ngIf="item.imageUrl" [style.backgroundImage]="'url(' + item.imageUrl + ')'">
+            <button class="close-btn" (click)="close.emit()">×</button>
+        </div>
+
+        <div class="modal-content">
+            <div class="header">
+                <h2>{{ item.name }}</h2>
+                <p class="description">{{ item.description }}</p>
+                <span class="price-tag">{{ item.price | currency }}</span>
+            </div>
+
+            <div class="customization-section">
+                <h3>Ingredientes</h3>
+                <p class="subtitle">Desmarca lo que quieres quitar</p>
+                <div class="options-grid">
+                    <label class="option-item" *ngFor="let ing of displayIngredients">
+                        <input type="checkbox" checked (change)="toggleIngredient(ing, $event)">
+                        <span>{{ ing }}</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="customization-section">
+                <h3>Extras</h3>
+                <p class="subtitle">Personaliza tu pedido</p>
+                <div class="options-grid">
+                    <label class="option-item" *ngFor="let extra of displayExtras">
+                        <input type="checkbox" (change)="toggleExtra(extra, $event)">
+                        <div class="extra-info">
+                            <span>{{ extra.name }}</span>
+                            <span class="extra-price">+{{ extra.price | currency }}</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="customization-section">
+                <h3>Notas</h3>
+                <textarea [(ngModel)]="notes" placeholder="Ej: Muy cocida, sin sal, etc..." rows="2"></textarea>
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <div class="quantity-control">
+                <button (click)="decrement()">-</button>
+                <span>{{ quantity }}</span>
+                <button (click)="increment()">+</button>
+            </div>
+            <button class="add-btn" (click)="addToCart()">
+                Agregar {{ getTotalPrice() | currency }}
+            </button>
+        </div>
+    </div>
+</div>

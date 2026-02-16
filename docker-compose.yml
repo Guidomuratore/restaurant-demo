@@ -1,0 +1,7 @@
+services:
+  restaurant-demo:
+    build: .
+    container_name: restaurant-demo
+    restart: always
+    ports:
+      - "4200:80" # Expose on port 4200 (maps to 80 inside container)

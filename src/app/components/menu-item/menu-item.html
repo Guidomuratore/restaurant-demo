@@ -1,0 +1,23 @@
+<div class="menu-item-card">
+  <div class="image-container" *ngIf="item.imageUrl">
+    <img [src]="item.imageUrl" [alt]="item.name" loading="lazy">
+  </div>
+  <div class="content">
+    <div class="header">
+      <h3>{{ item.name }}</h3>
+      <span class="price">{{ item.price | currency }}</span>
+    </div>
+    <p class="description">{{ item.description }}</p>
+    <div class="actions">
+      <button (click)="addToCart()" class="add-btn primary">
+        Agregar
+      </button>
+      <button (click)="openDetails()" class="customize-btn">
+        Personalizar
+      </button>
+    </div>
+  </div>
+  <div class="quantity-badge" *ngIf="quantity() > 0">
+    {{ quantity() }}
+  </div>
+</div>
