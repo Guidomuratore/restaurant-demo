@@ -25,14 +25,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      const status = params['collection_status'] || params['status'];
-
-      if (status === 'approved') {
-        // Simple alert for now, could be a toast or modal
-        setTimeout(() => alert('✅ ¡Pago exitoso! Muchas gracias por tu compra. 🍔'), 500);
-      } else if (status === 'failure' || status === 'null') {
-        setTimeout(() => alert('❌ Hubo un problema con el pago. Por favor intenta nuevamente.'), 500);
-      }
+      // Logic removed to avoid native alerts. 
+      // Payment feedback is handled by PaymentResultComponent.
     });
   }
 }
