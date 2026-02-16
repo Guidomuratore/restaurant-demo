@@ -1,36 +1,32 @@
 <div class="overlay" (click)="close()">
     <div class="modal" (click)="$event.stopPropagation()">
+        <!-- Header -->
         <div class="modal-header">
-            <h2>Tu Pedido</h2>
+            <h2>{{ step === 'cart' ? 'Tu Pedido' : 'Finalizar Compra' }}</h2>
             <button class="close-btn" (click)="close()">×</button>
         </div>
 
-        <div class="modal-body">
+        <!-- BODY: CART STEP -->
+        <div class="modal-body" *ngIf="step === 'cart'">
             <div *ngIf="cartService.cartItems().length === 0" class="empty-cart">
+                <div class="empty-icon">🍽️</div>
                 <p>Tu carrito está vacío.</p>
-                <button class="cta-btn secondary" (click)="close()">Ver Menú</button>
+                <span>¡Agrega algunas delicias del menú!</span>
+                <button class="cta-btn theme-primary" (click)="goToMenu()">Ir al Menú</button>
             </div>
 
             <div *ngIf="cartService.cartItems().length > 0" class="cart-items">
                 <div *ngFor="let item of cartService.cartItems(); let i = index" class="cart-item">
-                    <!-- Optional: Image thumbnail if desired -->
-                    <!-- <img [src]="item.imageUrl" alt="" class="thumb"> -->
-
                     <div class="item-details">
                         <h4>{{ item.name }}</h4>
-                        <!-- Display Customizations -->
                         <div class="customizations"
                             *ngIf="item.selectedExtras?.length || item.removedIngredients?.length || item.notes">
                             <small *ngIf="item.removedIngredients?.length">Sin: {{ getRemovedIngredients(item)
                                 }}</small>
-                            <small *ngIf="item.selectedExtras?.length">
-                                + {{ getExtrasNames(item) }}
-                            </small>
+                            <small *ngIf="item.selectedExtras?.length">+ {{ getExtrasNames(item) }}</small>
                             <small *ngIf="item.notes" class="note">"{{ item.notes }}"</small>
                         </div>
-                        <span class="price-unit">
-                            {{ (getItemTotal(item) / item.quantity) | currency }}
-                        </span>
+                        <span class="price-unit">{{ (getItemTotal(item) / item.quantity) | currency }}</span>
                     </div>
 
                     <div class="controls">
@@ -39,31 +35,101 @@
                         <button (click)="increment(i)">+</button>
                     </div>
 
-                    <div class="item-total">
-                        {{ getItemTotal(item) | currency }}
-                    </div>
-
+                    <div class="item-total">{{ getItemTotal(item) | currency }}</div>
                     <button class="remove-btn" (click)="remove(i)">🗑️</button>
                 </div>
             </div>
         </div>
 
-        <div class="modal-footer" *ngIf="cartService.cartItems().length > 0">
+        <!-- BODY: CHECKOUT STEP -->
+        <div class="modal-body checkout-form" *ngIf="step === 'checkout'">
+            <div class="method-toggles">
+                <button [class.active]="deliveryMethod === 'delivery'" (click)="setDeliveryMethod('delivery')">
+                    🛵 Delivery
+                </button>
+                <button [class.active]="deliveryMethod === 'takeaway'" (click)="setDeliveryMethod('takeaway')">
+                    🛍️ Retiro
+                </button>
+            </div>
+
+            <form class="checkout-inputs">
+                <div class="form-group">
+                    <label>Nombre *</label>
+                    <input type="text" [(ngModel)]="customer.name" name="name" placeholder="Tu nombre completo"
+                        [class.error]="errors.name">
+                    <small class="error-text" *ngIf="errors.name">{{ errors.name }}</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Teléfono *</label>
+                    <input type="tel" [(ngModel)]="customer.phone" name="phone" placeholder="WhatsApp / Celular"
+                        [class.error]="errors.phone">
+                    <small class="error-text" *ngIf="errors.phone">{{ errors.phone }}</small>
+                </div>
+
+                <div class="form-group" *ngIf="deliveryMethod === 'delivery'">
+                    <label>Dirección *</label>
+                    <input type="text" [(ngModel)]="customer.address" name="address"
+                        placeholder="Calle, Altura, Piso..." [class.error]="errors.address">
+                    <small class="error-text" *ngIf="errors.address">{{ errors.address }}</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Notas del Pedido (Opcional)</label>
+                    <textarea [(ngModel)]="customer.notes" name="notes" rows="2"
+                        placeholder="Ej: Timbre no funciona, sin cubiertos..."></textarea>
+                </div>
+
+                <div class="payment-section">
+                    <label>Forma de Pago</label>
+                    <div class="payment-options">
+                        <div class="option" [class.selected]="paymentMethod === 'mercadopago'"
+                            (click)="selectPaymentMethod('mercadopago')">
+                            💳 MercadoPago
+                        </div>
+                        <div class="option" [class.selected]="paymentMethod === 'cash'"
+                            (click)="selectPaymentMethod('cash')">
+                            💵 Efectivo / Transferencia
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- FOOTER: CART ACTIONS -->
+        <div class="modal-footer" *ngIf="step === 'cart' && cartService.cartItems().length > 0">
             <div class="total-row">
                 <span>Total</span>
                 <span class="total-amount">{{ cartService.totalPrice() | currency }}</span>
             </div>
             <div class="actions">
-                <button class="cta-btn primary" (click)="confirmOrder()">
-                    Pedir por WhatsApp 📱
-                </button>
-                <button class="cta-btn mp-btn" (click)="payWithMercadoPago()" [disabled]="isLoadingMp">
-                    {{ isLoadingMp ? 'Cargando...' : 'Pagar con MercadoPago 💳' }}
+                <button class="cta-btn theme-primary" (click)="proceedToCheckout()">
+                    Ir a Pagar
                 </button>
             </div>
-            <button class="cta-btn secondary" (click)="close()">
-                Seguir Pidiendo
-            </button>
+            <button class="cta-btn secondary" (click)="close()">Seguir Pidiendo</button>
+        </div>
+
+        <!-- FOOTER: CHECKOUT ACTIONS -->
+        <div class="modal-footer" *ngIf="step === 'checkout'">
+            <div class="total-row sm">
+                <span>Total a Pagar:</span>
+                <span class="total-amount">{{ cartService.totalPrice() | currency }}</span>
+            </div>
+
+            <div class="actions">
+                <button class="cta-btn" [class.mp-btn]="paymentMethod === 'mercadopago'"
+                    [class.primary]="paymentMethod === 'cash'" (click)="submitOrder()" [disabled]="isLoadingMp">
+                    <ng-container *ngIf="isLoadingMp; else btnText">Cargando...</ng-container>
+                    <ng-template #btnText>
+                        {{ paymentMethod === 'mercadopago' ? 'Pagar con MercadoPago' : 'Confirmar Pedido' }}
+                    </ng-template>
+                </button>
+
+                <button class="cta-btn secondary" (click)="backToCart()">
+                    Volver al Carrito
+                </button>
+            </div>
         </div>
     </div>
 </div>

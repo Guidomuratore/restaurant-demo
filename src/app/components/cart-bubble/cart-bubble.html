@@ -1,5 +1,5 @@
 <div class="cart-bubble" *ngIf="cartService.totalItems() > 0" (click)="toggleCart()">
     <span class="count">{{ cartService.totalItems() }}</span>
-    <span class="label">Ver Pedido (${{ cartService.totalPrice() | currency }})</span>
+    <span class="label">Ver Pedido &bull; {{ cartService.totalPrice() | currency }}</span>
     <div class="icon">🛒</div>
 </div>

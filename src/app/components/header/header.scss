@@ -48,5 +48,61 @@ header {
                 }
             }
         }
+
+        .header-cart-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateY(-2px);
+            }
+
+            &.has-items {
+                background: var(--primary-color);
+                border-color: var(--primary-color);
+                box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
+            }
+
+            .price {
+                font-weight: 600;
+                font-size: 0.95rem;
+                margin-right: 4px;
+            }
+
+            .badge {
+                background: white;
+                color: var(--primary-color);
+                font-size: 0.8rem;
+                font-weight: bold;
+                padding: 2px 6px;
+                border-radius: 10px;
+                min-width: 20px;
+                text-align: center;
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    header .header-content {
+        nav {
+            display: none;
+        }
+
+        // Hide menu links on mobile if desired, or use hamburger
+
+        // Ensure logo and cart are spaced out
+        justify-content: space-between;
     }
 }

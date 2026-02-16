@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MenuItem, MenuExtra } from '../../models/menu-item.model';
@@ -11,7 +11,7 @@ import { CartService } from '../../services/cart';
   templateUrl: './product-details.html',
   styleUrl: './product-details.scss',
 })
-export class ProductDetailsComponent {
+export class ProductDetailsComponent implements OnInit {
   @Input({ required: true }) item!: MenuItem;
   @Output() close = new EventEmitter<void>();
 
@@ -22,13 +22,14 @@ export class ProductDetailsComponent {
   selectedExtras: MenuExtra[] = [];
   removedIngredients: string[] = [];
 
-  // Mock Extras/Ingredients if not present (for demo purposes)
-  get displayIngredients() {
-    return this.item.ingredients || ['Lechuga', 'Tomate', 'Cebolla', 'Salsa Especial'];
-  }
+  // Stable arrays to prevent *ngFor re-rendering
+  displayIngredients: string[] = [];
+  displayExtras: MenuExtra[] = [];
 
-  get displayExtras() {
-    return this.item.extras || [
+  ngOnInit() {
+    this.displayIngredients = this.item.ingredients || ['Lechuga', 'Tomate', 'Cebolla', 'Salsa Especial'];
+
+    this.displayExtras = this.item.extras || [
       { name: 'Extra Cheddar', price: 1500 },
       { name: 'Bacon', price: 2000 },
       { name: 'Huevo Frito', price: 1200 }

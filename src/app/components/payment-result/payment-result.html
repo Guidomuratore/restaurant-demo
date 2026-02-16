@@ -1,0 +1,79 @@
+<div class="payment-result-container">
+    <div class="card result-card" [ngClass]="status()">
+        
+        <!-- SUCCESS STATE -->
+        <div *ngIf="status() === 'success'" class="content success">
+            <div class="icon-wrapper">
+                <div class="checkmark-circle">
+                    <div class="background"></div>
+                    <div class="checkmark draw"></div>
+                </div>
+            </div>
+            <h1>¡Pago Exitoso!</h1>
+            <p class="message">Tu pedido ha sido confirmado y enviado a la cocina.</p>
+            
+            <div class="details" *ngIf="paymentId()">
+                <div class="detail-row">
+                    <span>ID de Pago:</span>
+                    <span class="value">#{{ paymentId() }}</span>
+                </div>
+                <div class="detail-row" *ngIf="externalReference()">
+                    <span>Ref:</span>
+                    <span class="value">{{ externalReference() }}</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a routerLink="/" class="btn-primary">Volver al Menú</a>
+            </div>
+        </div>
+
+        <!-- FAILURE STATE -->
+        <div *ngIf="status() === 'failure'" class="content failure">
+            <div class="icon-wrapper">
+                <div class="cross-circle">
+                    <span class="cross-mark">×</span>
+                </div>
+            </div>
+            <h1>Pago Rechazado</h1>
+            <p class="message">Hubo un problema con tu pago. No te preocupes, no se te ha cobrado nada.</p>
+            
+            <div class="actions">
+                <a routerLink="/" class="btn-primary">Intentar Nuevamente</a>
+                <a routerLink="/" class="btn-secondary">Volver al Inicio</a>
+            </div>
+        </div>
+
+        <!-- PENDING STATE -->
+        <div *ngIf="status() === 'pending'" class="content pending">
+            <div class="icon-wrapper">
+                <div class="clock-circle">
+                    <span class="clock-face">🕒</span>
+                </div>
+            </div>
+            <h1>Pago Pendiente</h1>
+            <p class="message">Estamos esperando la confirmación de tu pago. Esto puede demorar unos minutos.</p>
+            
+            <div class="details" *ngIf="paymentId()">
+                <div class="detail-row">
+                    <span>ID de Operación:</span>
+                    <span class="value">#{{ paymentId() }}</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a routerLink="/" class="btn-primary">Volver al Menú</a>
+            </div>
+        </div>
+
+         <!-- UNKNOWN STATE -->
+         <div *ngIf="status() === 'unknown'" class="content unknown">
+            <h1>Estado Desconocido</h1>
+            <p class="message">No pudimos determinar el estado de tu pago.</p>
+            <div class="actions">
+                <a routerLink="/" class="btn-primary">Volver al Inicio</a>
+            </div>
+        </div>
+
+    </div>
+</div>

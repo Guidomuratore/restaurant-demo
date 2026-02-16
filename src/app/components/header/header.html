@@ -10,5 +10,14 @@
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
         </nav>
+
+        <!-- Headers Cart Button -->
+        <button class="header-cart-btn" (click)="cartService.toggleCart()"
+            [class.has-items]="cartService.totalItems() > 0">
+            <span class="icon">🛒</span>
+            <span class="price" *ngIf="cartService.totalItems() > 0">{{ cartService.totalPrice() |
+                currency:'$':'symbol':'1.0-0' }}</span>
+            <span class="badge" *ngIf="cartService.totalItems() > 0">{{ cartService.totalItems() }}</span>
+        </button>
     </div>
 </header>

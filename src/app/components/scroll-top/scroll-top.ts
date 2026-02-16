@@ -18,7 +18,7 @@ import { ScrollService } from '../../services/scroll.service';
   styles: [`
     .scroll-top-btn {
       position: fixed;
-      bottom: 20px;
+      bottom: 90px; // Above WhatsApp (20px + 60px + 10px margin)
       right: 20px;
       width: 50px;
       height: 50px;
@@ -29,7 +29,7 @@ import { ScrollService } from '../../services/scroll.service';
       font-size: 1.5rem;
       cursor: pointer;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      z-index: 999;
+      z-index: 990;
       opacity: 0;
       transform: translateY(20px);
       transition: all 0.3s ease;
@@ -54,7 +54,7 @@ import { ScrollService } from '../../services/scroll.service';
         .scroll-top-btn {
             width: 45px;
             height: 45px;
-            bottom: 20px;
+            bottom: 80px;
             right: 20px;
         }
     }

@@ -58,11 +58,37 @@
 
         .empty-cart {
             text-align: center;
-            padding: 2rem 0;
+            padding: 3rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            height: 100%;
+
+            .empty-icon {
+                font-size: 3rem;
+                margin-bottom: 0.5rem;
+                opacity: 0.8;
+            }
 
             p {
-                margin-bottom: 1rem;
+                margin: 0;
+                color: white;
+                font-size: 1.2rem;
+                font-weight: 600;
+            }
+
+            span {
                 color: var(--text-muted);
+                margin-bottom: 1rem;
+            }
+
+            .cta-btn {
+                width: auto;
+                min-width: 200px;
+                padding: 0.8rem 2rem;
+                margin-top: 1rem;
             }
         }
 
@@ -143,6 +169,185 @@
         }
     }
 
+    .cta-btn {
+        width: 100%;
+        padding: 1rem;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+
+        &.primary {
+            background: #25D366;
+            /* WhatsApp Green */
+            color: white;
+
+            &:hover {
+                background: #20BA5A;
+                transform: translateY(-2px);
+            }
+        }
+
+        &.mp-btn {
+            background: #009ee3;
+            /* MercadoPago Blue */
+            color: white;
+
+            &:hover {
+                background: #007eb5;
+                transform: translateY(-2px);
+            }
+        }
+
+        &.theme-primary {
+            background: var(--primary-color);
+            color: white;
+
+            &:hover {
+                background: linear-gradient(45deg, var(--primary-color), #ff8e8e);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            }
+        }
+
+        &.secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-main);
+
+            &:hover {
+                border-color: var(--text-main);
+                background: rgba(255, 255, 255, 0.05);
+            }
+        }
+    }
+
+    /* Checkout Form Styles */
+    .checkout-form {
+        animation: fadeIn 0.3s ease;
+        padding-top: 0.5rem;
+
+        .method-toggles {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px;
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem;
+
+            button {
+                flex: 1;
+                background: transparent;
+                border: none;
+                color: var(--text-muted);
+                padding: 0.6rem;
+                font-weight: 600;
+                cursor: pointer;
+                border-radius: var(--radius-sm);
+                transition: all 0.2s;
+
+                &.active {
+                    background: var(--primary-color);
+                    color: white;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+                }
+            }
+        }
+
+        .checkout-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                gap: 0.3rem;
+
+                label {
+                    font-size: 0.9rem;
+                    color: var(--text-muted);
+                }
+
+                input,
+                textarea {
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    color: white;
+                    padding: 0.8rem;
+                    border-radius: var(--radius-sm);
+                    font-family: inherit;
+                    font-size: 1rem;
+                    transition: border-color 0.2s;
+
+                    &:focus {
+                        outline: none;
+                        border-color: var(--primary-color);
+                        background: rgba(255, 255, 255, 0.08);
+                    }
+
+                    &.error {
+                        border-color: #ff4d4d;
+                    }
+                }
+
+                .error-text {
+                    color: #ff4d4d;
+                    font-size: 0.8rem;
+                }
+            }
+
+            .payment-section {
+                margin-top: 0.5rem;
+
+                label {
+                    display: block;
+                    margin-bottom: 0.5rem;
+                    color: var(--text-muted);
+                    font-size: 0.9rem;
+                }
+
+                .payment-options {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 0.8rem;
+
+                    .option {
+                        background: rgba(255, 255, 255, 0.05);
+                        border: 1px solid rgba(255, 255, 255, 0.1);
+                        padding: 0.8rem;
+                        border-radius: var(--radius-sm);
+                        text-align: center;
+                        cursor: pointer;
+                        font-size: 0.9rem;
+                        font-weight: 500;
+                        transition: all 0.2s;
+
+                        &:hover {
+                            background: rgba(255, 255, 255, 0.1);
+                        }
+
+                        &.selected {
+                            border-color: var(--primary-color);
+                            background: rgba(255, 107, 107, 0.1); // subtle primary tint
+                            color: white;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .modal-footer .total-row.sm {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+
+        .total-amount {
+            font-size: 1.2rem;
+        }
+    }
+
     .modal-footer {
         padding: 1.5rem;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -167,51 +372,6 @@
             display: grid;
             gap: 1rem;
             margin-bottom: 1rem;
-        }
-
-        .cta-btn {
-            width: 100%;
-            padding: 1rem;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-
-            &.primary {
-                background: #25D366;
-                /* WhatsApp Green */
-                color: white;
-                /* Margin removed */
-
-                &:hover {
-                    background: #20BA5A;
-                    transform: translateY(-2px);
-                }
-            }
-
-            &.mp-btn {
-                background: #009ee3;
-                /* MercadoPago Blue */
-                color: white;
-
-                &:hover {
-                    background: #007eb5;
-                    transform: translateY(-2px);
-                }
-            }
-
-            &.secondary {
-                background: transparent;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                color: var(--text-main);
-
-                &:hover {
-                    border-color: var(--text-main);
-                    background: rgba(255, 255, 255, 0.05);
-                }
-            }
         }
     }
 }

@@ -12,7 +12,7 @@ import { Component } from '@angular/core';
   styles: [`
     .whatsapp-float {
       position: fixed;
-      bottom: 90px;
+      bottom: 20px; // Back to bottom corner
       right: 20px;
       width: 60px;
       height: 60px;
@@ -61,7 +61,7 @@ import { Component } from '@angular/core';
         .whatsapp-float {
             width: 50px;
             height: 50px;
-            bottom: 80px;
+            bottom: 20px;
             
             img {
                 width: 28px;

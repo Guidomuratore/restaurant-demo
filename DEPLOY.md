@@ -26,7 +26,7 @@ Como no tienes el repositorio vinculado aún, sigue estos pasos:
 1.  Crea un **Nuevo Repositorio** vacío en tu GitHub/GitLab.
 2.  En tu terminal (VS Code), vincula tu PC con ese repo:
     ```bash
-    git remote add origin <LA_URL_DE_TU_NUEVO_REPO.git>
+    git remote add origin https://github.com/Guidomuratore/restaurant-demo.git
     git branch -M main
     git add .
     git commit -m "Primer deploy a producción"
@@ -39,7 +39,7 @@ Conéctate a tu Raspberry Pi.
 
 **Opción A: Si es la primera vez (Clonar):**
 ```bash
-git clone <LA_URL_DE_TU_NUEVO_REPO.git> restaurant-demo
+git clone https://github.com/Guidomuratore/restaurant-demo.git restaurant-demo
 cd restaurant-demo
 docker-compose up -d --build
 ```
@@ -72,3 +72,15 @@ Entra a tu panel de Nginx Proxy Manager (usualmente puerto 81).
 3.  ¡Guardar y listo!
 
 Ahora tu web debería estar accesible en `https://demo-restaurant.guidomuratore.com.ar`. 🚀
+
+## 5. Solución de Problemas y Pruebas (MercadoPago) ⚠️
+
+**IMPORTANTE:** Si estás probando pagos y recibes errores "Fatal" o rechazos:
+
+1.  **Credenciales:** Usa tus credenciales de **TEST** (`APP_USR-...`) en n8n.
+2.  **URL:** Usa la URL de **Producción** (`init_point`), **NO** la de Sandbox (`sandbox_init_point`).
+3.  **Navegador:** Abre el link de pago SIEMPRE en **Modo Incógnito**.
+4.  **Email:** Usa un email falso (ej: `test@test.com`), **NUNCA** tu email real de MercadoPago.
+5.  **Tarjeta:** Usa las tarjetas de prueba de MP (ej: Visa terminada en `3704`, titular `APRO`).
+
+*Para más detalles, revisa la guía de pruebas generada.*
