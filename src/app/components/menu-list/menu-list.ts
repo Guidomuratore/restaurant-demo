@@ -5,7 +5,7 @@ import { ProductDetailsComponent } from '../product-details/product-details';
 import { MenuItem } from '../../models/menu-item.model';
 import { ScrollService } from '../../services/scroll.service';
 import { MenuService } from '../../services/menu.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CartService } from '../../services/cart';
 
 @Component({
