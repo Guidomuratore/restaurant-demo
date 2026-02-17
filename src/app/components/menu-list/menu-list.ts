@@ -42,10 +42,15 @@ export class MenuListComponent implements OnInit, AfterViewInit, OnDestroy {
       if (params['openCart'] === 'true') {
         // Short timeout to ensure view is ready
         setTimeout(() => {
-          // Only open if not already open (though simple toggle might be enough if we assume closed)
-          // But CartService toggleCart just toggles.
-          // Let's assume it starts closed. 
           this.cartService.toggleCart();
+
+          // Clean URL without reloading page
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { openCart: null },
+            queryParamsHandling: 'merge',
+            replaceUrl: true
+          });
         }, 500);
       }
     });
