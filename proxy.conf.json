@@ -1,7 +1,7 @@
 {
     "/api": {
         "target": "https://n8n.guidomuratore.com.ar",
-        "secure": true,
+        "secure": false,
         "changeOrigin": true,
         "logLevel": "debug",
         "pathRewrite": {

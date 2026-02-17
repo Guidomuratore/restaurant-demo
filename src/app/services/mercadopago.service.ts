@@ -26,7 +26,16 @@ export class MercadoPagoService {
 
     async createPreference(orderData: any): Promise<string | null> {
         try {
+            console.log('Enviando datos a pago:', orderData);
+
+            console.log('Enviando datos a pago:', orderData);
             const response: any = await firstValueFrom(this.http.post(this.n8nWebhookUrl, orderData));
+            console.log('Respuesta del servidor de pago:', response);
+
+            if (!response) {
+                throw new Error('La respuesta del servidor fue vacía (null). Verifica el Webhook de n8n.');
+            }
+
             // We prefer the 'sandbox_init_point' for testing purposes.
             // If not available, we fall back to 'init_point'.
             const redirectUrl = response.sandbox_init_point || response.init_point;
@@ -48,7 +57,9 @@ export class MercadoPagoService {
             return null;
         } catch (error) {
             console.error('Error creating preference:', error);
-            alert('Error al conectar con el servidor de pago.');
+            const err = error as any;
+            const msg = err.error?.message || err.message || 'Error desconocido';
+            alert(`Error al conectar con el servidor de pago: ${msg}`);
             return null;
         }
     }
