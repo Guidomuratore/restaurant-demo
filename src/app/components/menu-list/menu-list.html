@@ -1,5 +1,18 @@
-<div class="loading-container" *ngIf="isLoading">
-    <div class="spinner"></div>
+<div class="loading-container " *ngIf="isLoading">
+    <!-- Skeleton Loading -->
+    <div class="skeleton-nav">
+        <div class="skeleton-pill" *ngFor="let i of [1,2,3,4,5]"></div>
+    </div>
+    <div class="skeleton-grid">
+        <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6]">
+            <div class="skeleton-img"></div>
+            <div class="skeleton-text-group">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-desc"></div>
+                <div class="skeleton-price"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="nav-background sticky" *ngIf="!isLoading">

@@ -16,6 +16,7 @@ export class MenuService {
     getMenu(): Observable<MenuItem[]> {
         const urlWithCacheBuster = `${this.apiUrl}&t=${new Date().getTime()}`;
         console.log('MenuService: Fetching from', urlWithCacheBuster);
+
         return this.http.get(urlWithCacheBuster, { responseType: 'text' }).pipe(
             map(csvData => {
                 console.log('MenuService: Received CSV data length:', csvData.length);
