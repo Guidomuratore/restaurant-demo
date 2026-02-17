@@ -62,6 +62,7 @@ export class PaymentResultComponent implements OnInit {
 
                 if (this.status() === 'success') {
                     this.cartService.clearCart();
+                    localStorage.removeItem('checkout_data');
                 }
 
                 // 3. Clean URL (Remove query params)
@@ -82,5 +83,9 @@ export class PaymentResultComponent implements OnInit {
             queryParams: {},
             replaceUrl: true // Replaces the history entry so back button doesn't take you to the ugly URL
         });
+    }
+
+    retryPayment() {
+        this.router.navigate(['/menu'], { queryParams: { openCart: 'true' } });
     }
 }

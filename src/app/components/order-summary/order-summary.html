@@ -60,28 +60,28 @@
             <form class="checkout-inputs">
                 <div class="form-group">
                     <label>Nombre *</label>
-                    <input type="text" [(ngModel)]="customer.name" name="name" placeholder="Tu nombre completo"
-                        [class.error]="errors.name">
+                    <input type="text" [(ngModel)]="customer.name" (ngModelChange)="onInputChange()" name="name"
+                        placeholder="Tu nombre completo" [class.error]="errors.name">
                     <small class="error-text" *ngIf="errors.name">{{ errors.name }}</small>
                 </div>
 
                 <div class="form-group">
                     <label>Teléfono *</label>
-                    <input type="tel" [(ngModel)]="customer.phone" name="phone" placeholder="WhatsApp / Celular"
-                        [class.error]="errors.phone">
+                    <input type="tel" [(ngModel)]="customer.phone" (ngModelChange)="onInputChange()" name="phone"
+                        placeholder="WhatsApp / Celular" [class.error]="errors.phone">
                     <small class="error-text" *ngIf="errors.phone">{{ errors.phone }}</small>
                 </div>
 
                 <div class="form-group" *ngIf="deliveryMethod === 'delivery'">
                     <label>Dirección *</label>
-                    <input type="text" [(ngModel)]="customer.address" name="address"
+                    <input type="text" [(ngModel)]="customer.address" (ngModelChange)="onInputChange()" name="address"
                         placeholder="Calle, Altura, Piso..." [class.error]="errors.address">
                     <small class="error-text" *ngIf="errors.address">{{ errors.address }}</small>
                 </div>
 
                 <div class="form-group">
                     <label>Notas del Pedido (Opcional)</label>
-                    <textarea [(ngModel)]="customer.notes" name="notes" rows="2"
+                    <textarea [(ngModel)]="customer.notes" (ngModelChange)="onInputChange()" name="notes" rows="2"
                         placeholder="Ej: Timbre no funciona, sin cubiertos..."></textarea>
                 </div>
 

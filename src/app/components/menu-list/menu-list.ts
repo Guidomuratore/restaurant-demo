@@ -5,6 +5,8 @@ import { ProductDetailsComponent } from '../product-details/product-details';
 import { MenuItem } from '../../models/menu-item.model';
 import { ScrollService } from '../../services/scroll.service';
 import { MenuService } from '../../services/menu.service';
+import { ActivatedRoute } from '@angular/router';
+import { CartService } from '../../services/cart';
 
 @Component({
   selector: 'app-menu-list',
@@ -26,16 +28,27 @@ export class MenuListComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = true; // Loading state
 
   private menuService = inject(MenuService);
+  private cartService = inject(CartService);
+  private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef); // Inject CDR
   private observer: IntersectionObserver | null = null;
   private isClicked = false;
 
-  // constructor(private ngZone: NgZone) { } // Reverting to original if ScrollService is not needed, or just keep it unused? 
-  // keeping ScrollService injection is fine, but removing subscription.
   constructor(private ngZone: NgZone, private scrollService: ScrollService) { }
 
   ngOnInit() {
-    // Removed isAutoScrolling check to allow category updates during BackToTop
+    // Check if we need to open the cart immediately (e.g. from retry payment)
+    this.route.queryParams.subscribe(params => {
+      if (params['openCart'] === 'true') {
+        // Short timeout to ensure view is ready
+        setTimeout(() => {
+          // Only open if not already open (though simple toggle might be enough if we assume closed)
+          // But CartService toggleCart just toggles.
+          // Let's assume it starts closed. 
+          this.cartService.toggleCart();
+        }, 500);
+      }
+    });
 
     this.isLoading = true;
     this.menuService.getMenu().subscribe({

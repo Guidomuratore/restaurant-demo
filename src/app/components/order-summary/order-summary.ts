@@ -47,6 +47,30 @@ export class OrderSummaryComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     document.body.style.overflow = 'hidden';
+    this.loadCheckoutData();
+  }
+
+  saveCheckoutData() {
+    const data = {
+      customer: this.customer,
+      deliveryMethod: this.deliveryMethod,
+      paymentMethod: this.paymentMethod
+    };
+    localStorage.setItem('checkout_data', JSON.stringify(data));
+  }
+
+  loadCheckoutData() {
+    const saved = localStorage.getItem('checkout_data');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        if (data.customer) this.customer = { ...this.customer, ...data.customer };
+        if (data.deliveryMethod) this.deliveryMethod = data.deliveryMethod;
+        if (data.paymentMethod) this.paymentMethod = data.paymentMethod;
+      } catch (e) {
+        console.error('Error loading checkout data', e);
+      }
+    }
   }
 
   ngOnDestroy() {
@@ -75,10 +99,12 @@ export class OrderSummaryComponent implements OnInit, OnDestroy {
 
   setDeliveryMethod(method: 'delivery' | 'takeaway') {
     this.deliveryMethod = method;
+    this.saveCheckoutData();
   }
 
   selectPaymentMethod(method: 'mercadopago' | 'cash') {
     this.paymentMethod = method;
+    this.saveCheckoutData();
   }
 
   validateForm(): boolean {
@@ -100,7 +126,12 @@ export class OrderSummaryComponent implements OnInit, OnDestroy {
       isValid = false;
     }
 
+    this.saveCheckoutData();
     return isValid;
+  }
+
+  onInputChange() {
+    this.saveCheckoutData();
   }
 
   async submitOrder() {
@@ -191,8 +222,8 @@ export class OrderSummaryComponent implements OnInit, OnDestroy {
       const result = await this.mpService.createPreference(orderData);
 
       if (result && result.startsWith('http')) {
+        this.isLoadingMp = false; // Reset state in case redirect is slow or blocked
         this.mpService.createCheckout(result);
-        // Do NOT set isLoadingMp = false here, we are redirecting
       } else if (result) {
         // It's an ID, using modal
         this.isLoadingMp = false;
