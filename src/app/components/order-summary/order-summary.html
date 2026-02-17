@@ -16,6 +16,11 @@
             </div>
 
             <div *ngIf="cartService.cartItems().length > 0" class="cart-items">
+                <div class="cart-actions">
+                    <button class="clear-cart-btn" (click)="askClearCart()">
+                        🗑️ Vaciar Carrito
+                    </button>
+                </div>
                 <div *ngFor="let item of cartService.cartItems(); let i = index" class="cart-item">
                     <div class="item-details">
                         <h4>{{ item.name }}</h4>
@@ -28,15 +33,15 @@
                         </div>
                         <span class="price-unit">{{ (getItemTotal(item) / item.quantity) | currency }}</span>
                     </div>
-
-                    <div class="controls">
-                        <button (click)="decrement(i)">-</button>
-                        <span>{{ item.quantity }}</span>
-                        <button (click)="increment(i)">+</button>
+                    <div class="item-actions">
+                        <div class="quantity-controls">
+                            <button (click)="decrement(i)">-</button>
+                            <span>{{ item.quantity }}</span>
+                            <button (click)="increment(i)">+</button>
+                        </div>
+                        <button class="edit-btn" (click)="editItem(item, i)" title="Editar">✎</button>
+                        <button class="remove-btn" (click)="remove(i)">×</button>
                     </div>
-
-                    <div class="item-total">{{ getItemTotal(item) | currency }}</div>
-                    <button class="remove-btn" (click)="remove(i)">🗑️</button>
                 </div>
             </div>
         </div>
@@ -130,6 +135,27 @@
                     Volver al Carrito
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Item Modal -->
+<app-product-details *ngIf="editingItem" [item]="editingItem" [cartItem]="editingItem" [cartIndex]="editingIndex"
+    mode="edit" (close)="closeEdit()">
+</app-product-details>
+
+<!-- Clear Cart Confirmation Modal -->
+<div class="overlay confirmation-overlay" *ngIf="showClearConfirmation" (click)="cancelClear()">
+    <div class="modal confirmation-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>¿Vaciar Carrito?</h2>
+        </div>
+        <div class="modal-body">
+            <p>Se eliminarán todos los productos que has seleccionado. Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="cta-btn secondary" (click)="cancelClear()">Cancelar</button>
+            <button class="cta-btn theme-primary" (click)="confirmClear()">Sí, Vaciar</button>
         </div>
     </div>
 </div>

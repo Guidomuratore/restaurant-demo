@@ -31,6 +31,8 @@ body {
   background-color: var(--dark-bg);
   color: var(--text-main);
   line-height: 1.6;
+  overflow-x: hidden;
+  /* Prevent horizontal scroll */
 }
 
 h1,

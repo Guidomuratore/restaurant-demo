@@ -2,6 +2,8 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
+import { CartService } from '../../services/cart';
+
 @Component({
     selector: 'app-payment-result',
     standalone: true,
@@ -12,6 +14,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 export class PaymentResultComponent implements OnInit {
     private route = inject(ActivatedRoute);
     private router = inject(Router);
+    private cartService = inject(CartService);
 
     // States: 'success' | 'failure' | 'pending' | 'unknown'
     status = signal<string>('unknown');
@@ -55,6 +58,10 @@ export class PaymentResultComponent implements OnInit {
                     if (mpStatus === 'approved') this.status.set('success');
                     else if (mpStatus === 'rejected' || mpStatus === 'null') this.status.set('failure');
                     else if (mpStatus === 'in_process' || mpStatus === 'pending') this.status.set('pending');
+                }
+
+                if (this.status() === 'success') {
+                    this.cartService.clearCart();
                 }
 
                 // 3. Clean URL (Remove query params)

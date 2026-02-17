@@ -1,7 +1,7 @@
 header {
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 1600;
     background: var(--glass-bg);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--glass-border);
@@ -94,15 +94,146 @@ header {
     }
 }
 
+/* Hamburger Menu Button */
+/* Hidden on Desktop */
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 2000;
+    /* Above mobile nav */
+
+    .bar {
+        display: block;
+        width: 25px;
+        height: 3px;
+        margin: 5px auto;
+        -webkit-transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in-out;
+        background-color: var(--text-main);
+        border-radius: 2px;
+    }
+
+    &.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+
+    &.active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+        background-color: var(--primary-color);
+    }
+
+    &.active .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+        background-color: var(--primary-color);
+    }
+}
+
+/* Mobile Nav Overlay */
+.mobile-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100dvh;
+    background: rgba(22, 33, 62, 0.95);
+    /* Dark semi-transparent */
+    backdrop-filter: blur(15px);
+    z-index: 1500;
+    /* Below hamburger/cart but above content */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+
+    /* Animation State */
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s ease;
+    transform: translateY(-20px);
+
+    &.open {
+        opacity: 1;
+        pointer-events: all;
+        transform: translateY(0);
+    }
+
+    nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+
+        li a {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            text-decoration: none;
+            transition: color 0.3s;
+            display: inline-block;
+
+            &:hover,
+            &:active {
+                color: var(--primary-color);
+                transform: scale(1.1);
+            }
+        }
+    }
+
+    .social-links {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 2rem;
+
+        a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s;
+
+            &:hover {
+                color: white;
+                border-color: var(--primary-color);
+                background: rgba(255, 107, 107, 0.1);
+            }
+        }
+    }
+}
+
+
 @media (max-width: 768px) {
     header .header-content {
         nav {
             display: none;
         }
 
-        // Hide menu links on mobile if desired, or use hamburger
+        .hamburger {
+            display: block;
+            order: -1;
+            /* Move to the left */
+        }
 
-        // Ensure logo and cart are spaced out
-        justify-content: space-between;
+        /* Adjust layout for 3 items: Hamburger | Logo | Cart */
+        /* But currently structured as: Logo | Nav | Cart */
+        /* New structure in HTML: Logo | Nav | Hamburger | Cart */
+        /* We want: Hamburger | Logo | Cart ? Or Logo | Cart | Hamburger? */
+        /* Currently HTML order: Logo, Nav, Hamburger, Cart */
+        /* Flex space-between handles it, but maybe we want Hamburger first? */
+        /* Or keep Logo left, Cart right, Hamburger right-of-cart? */
+
+        /* Let's keep Logo Left, and group Hamburger + Cart on Right? */
+        /* Or Hamburger Left, Logo Center, Cart Right? */
+
+        /* For now, just ensuring they fit. */
+        gap: 1rem;
     }
 }

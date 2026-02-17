@@ -1,15 +1,22 @@
 <header>
     <div class="container header-content">
-        <a routerLink="/" class="logo">
+        <a (click)="navigateToHome()" class="logo" style="cursor: pointer;">
             Resto<span>Demo</span>
         </a>
         <nav>
             <ul>
-                <li><a routerLink="/">Inicio</a></li>
-                <li><a routerLink="/menu" (click)="scrollToTop()">Menú</a></li>
+                <li><a (click)="navigateToHome()" style="cursor: pointer;">Inicio</a></li>
+                <li><a (click)="navigateToMenu()" style="cursor: pointer;">Menú</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
         </nav>
+
+        <!-- Mobile Menu Button -->
+        <button class="hamburger" (click)="toggleMenu()" [class.active]="isMenuOpen" aria-label="Menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
 
         <!-- Headers Cart Button -->
         <button class="header-cart-btn" (click)="cartService.toggleCart()"
@@ -19,5 +26,20 @@
                 currency:'$':'symbol':'1.0-0' }}</span>
             <span class="badge" *ngIf="cartService.totalItems() > 0">{{ cartService.totalItems() }}</span>
         </button>
+    </div>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav" [class.open]="isMenuOpen">
+        <nav>
+            <ul>
+                <li><a (click)="navigateToHome()" style="cursor: pointer;">Inicio</a></li>
+                <li><a (click)="navigateToMenu()" style="cursor: pointer;">Menú</a></li>
+                <li><a href="#contacto" (click)="closeMenu()">Contacto</a></li>
+            </ul>
+        </nav>
+        <div class="social-links">
+            <a href="#" target="_blank">Instagram</a>
+            <a href="#" target="_blank">WhatsApp</a>
+        </div>
     </div>
 </header>

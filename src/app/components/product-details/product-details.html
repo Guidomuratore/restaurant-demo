@@ -16,7 +16,7 @@
                 <p class="subtitle">Desmarca lo que quieres quitar</p>
                 <div class="options-grid">
                     <label class="option-item" *ngFor="let ing of displayIngredients">
-                        <input type="checkbox" checked (change)="toggleIngredient(ing, $event)">
+                        <input type="checkbox" [checked]="!isIngredientRemoved(ing)" (change)="toggleIngredient(ing, $event)">
                         <span>{{ ing }}</span>
                     </label>
                 </div>
@@ -27,7 +27,7 @@
                 <p class="subtitle">Personaliza tu pedido</p>
                 <div class="options-grid">
                     <label class="option-item" *ngFor="let extra of displayExtras">
-                        <input type="checkbox" (change)="toggleExtra(extra, $event)">
+                        <input type="checkbox" [checked]="isExtraSelected(extra)" (change)="toggleExtra(extra, $event)">
                         <div class="extra-info">
                             <span>{{ extra.name }}</span>
                             <span class="extra-price">+{{ extra.price | currency }}</span>
@@ -49,8 +49,8 @@
                 <span>{{ quantity }}</span>
                 <button (click)="increment()">+</button>
             </div>
-            <button class="add-btn" (click)="addToCart()">
-                Agregar {{ getTotalPrice() | currency }}
+            <button class="add-btn" (click)="save()">
+                {{ mode === 'edit' ? 'Actualizar' : 'Agregar' }} {{ getTotalPrice() | currency }}
             </button>
         </div>
     </div>

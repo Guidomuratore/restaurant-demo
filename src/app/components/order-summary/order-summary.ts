@@ -8,11 +8,12 @@ import { WhatsAppService } from '../../services/whatsapp';
 import { MercadoPagoService } from '../../services/mercadopago.service';
 import { MenuService } from '../../services/menu.service'; // Import MenuService
 import { CartItem } from '../../models/menu-item.model';
+import { ProductDetailsComponent } from '../product-details/product-details';
 
 @Component({
   selector: 'app-order-summary',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ProductDetailsComponent],
   templateUrl: './order-summary.html',
   styleUrl: './order-summary.scss',
 })
@@ -22,6 +23,10 @@ export class OrderSummaryComponent implements OnInit, OnDestroy {
   mpService = inject(MercadoPagoService);
   menuService = inject(MenuService); // Inject MenuService
   router = inject(Router);
+
+  // Edit State
+  editingItem: CartItem | null = null;
+  editingIndex: number = -1;
 
   // Checkout State
   step: 'cart' | 'checkout' = 'cart';
@@ -147,15 +152,37 @@ export class OrderSummaryComponent implements OnInit, OnDestroy {
   async payWithMercadoPago() {
     this.isLoadingMp = true;
 
+    // Transform items to include Extras in Price and Title
+    const items = this.cartService.cartItems().map(item => {
+      const extrasTotal = item.selectedExtras?.reduce((acc, extra) => acc + extra.price, 0) || 0;
+      const extrasNames = item.selectedExtras?.map(e => e.name).join(', ');
+
+      const finalPrice = item.price + extrasTotal;
+      const finalTitle = item.name + (extrasNames ? ` (+ ${extrasNames})` : '');
+
+      return {
+        ...item,
+        // Overwrite original fields so n8n picks them up correctly
+        price: finalPrice,
+        name: finalTitle,
+        // Also keep new fields just in case
+        title: finalTitle,
+        unit_price: finalPrice,
+        quantity: item.quantity,
+        currency_id: 'ARS'
+      };
+    });
+
     // Create Metadata including Delivery Info
     const orderData = {
-      items: this.cartService.cartItems(),
+      items: items,
       total: this.cartService.totalPrice(),
       payer: {
         name: this.customer.name,
         phone: this.customer.phone,
         address: this.deliveryMethod === 'delivery' ? this.customer.address : 'Retiro en Local',
-        deliveryType: this.deliveryMethod
+        deliveryType: this.deliveryMethod,
+        notes: this.customer.notes
       }
     };
 
@@ -230,6 +257,32 @@ export class OrderSummaryComponent implements OnInit, OnDestroy {
 
   remove(index: number) {
     this.cartService.removeFromCart(index);
+  }
+
+  editItem(item: CartItem, index: number) {
+    this.editingItem = item;
+    this.editingIndex = index;
+  }
+
+  closeEdit() {
+    this.editingItem = null;
+    this.editingIndex = -1;
+  }
+
+  // Confirmation Modal State
+  showClearConfirmation = false;
+
+  askClearCart() {
+    this.showClearConfirmation = true;
+  }
+
+  confirmClear() {
+    this.cartService.clearCart();
+    this.showClearConfirmation = false;
+  }
+
+  cancelClear() {
+    this.showClearConfirmation = false;
   }
 
   getItemTotal(item: CartItem): number {

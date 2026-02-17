@@ -29,7 +29,7 @@ import { ScrollService } from '../../services/scroll.service';
       font-size: 1.5rem;
       cursor: pointer;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      z-index: 990;
+      z-index: 1500;
       opacity: 0;
       transform: translateY(20px);
       transition: all 0.3s ease;

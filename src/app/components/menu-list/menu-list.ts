@@ -30,9 +30,13 @@ export class MenuListComponent implements OnInit, AfterViewInit, OnDestroy {
   private observer: IntersectionObserver | null = null;
   private isClicked = false;
 
-  constructor(private ngZone: NgZone) { }
+  // constructor(private ngZone: NgZone) { } // Reverting to original if ScrollService is not needed, or just keep it unused? 
+  // keeping ScrollService injection is fine, but removing subscription.
+  constructor(private ngZone: NgZone, private scrollService: ScrollService) { }
 
   ngOnInit() {
+    // Removed isAutoScrolling check to allow category updates during BackToTop
+
     this.isLoading = true;
     this.menuService.getMenu().subscribe({
       next: (data) => {
@@ -97,8 +101,11 @@ export class MenuListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private scrollNavToCategory(category: string) {
+    const container = document.querySelector('.category-nav') as HTMLElement;
+    if (!container) return;
+
     // Find the button for this category
-    const buttons = document.querySelectorAll('.category-nav button');
+    const buttons = container.querySelectorAll('button');
     let targetButton: HTMLElement | null = null;
 
     buttons.forEach((btn: any) => {
@@ -108,10 +115,17 @@ export class MenuListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     if (targetButton) {
-      (targetButton as HTMLElement).scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center'
+      const btn = targetButton as HTMLElement;
+      const containerWidth = container.offsetWidth;
+      const buttonLeft = btn.offsetLeft;
+      const buttonWidth = btn.offsetWidth;
+
+      // Calculate center position
+      const scrollTo = buttonLeft - (containerWidth / 2) + (buttonWidth / 2);
+
+      container.scrollTo({
+        left: scrollTo,
+        behavior: 'smooth'
       });
     }
   }
