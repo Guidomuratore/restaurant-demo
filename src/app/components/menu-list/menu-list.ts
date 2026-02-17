@@ -30,6 +30,7 @@ export class MenuListComponent implements OnInit, AfterViewInit, OnDestroy {
   private menuService = inject(MenuService);
   private cartService = inject(CartService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private cdr = inject(ChangeDetectorRef); // Inject CDR
   private observer: IntersectionObserver | null = null;
   private isClicked = false;
