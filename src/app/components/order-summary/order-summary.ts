@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +16,7 @@ import { CartItem } from '../../models/menu-item.model';
   templateUrl: './order-summary.html',
   styleUrl: './order-summary.scss',
 })
-export class OrderSummaryComponent {
+export class OrderSummaryComponent implements OnInit, OnDestroy {
   cartService = inject(CartService);
   whatsappService = inject(WhatsAppService);
   mpService = inject(MercadoPagoService);
@@ -39,6 +39,14 @@ export class OrderSummaryComponent {
   // Validation Errors
   errors: any = {};
   isLoadingMp = false;
+
+  ngOnInit() {
+    document.body.style.overflow = 'hidden';
+  }
+
+  ngOnDestroy() {
+    document.body.style.overflow = '';
+  }
 
   close() {
     this.cartService.toggleCart();
