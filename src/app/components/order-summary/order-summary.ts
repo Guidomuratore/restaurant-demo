@@ -214,6 +214,13 @@ export class OrderSummaryComponent implements OnInit, OnDestroy {
         address: this.deliveryMethod === 'delivery' ? this.customer.address : 'Retiro en Local',
         deliveryType: this.deliveryMethod,
         notes: this.customer.notes
+      },
+      payment_methods: {
+        excluded_payment_types: [
+          { id: "ticket" },
+          { id: "atm" }
+        ],
+        installments: 1
       }
     };
 
